@@ -1,0 +1,29 @@
+
+curl -X POST -F "image=@F:/ds_task_3/training/memory/out9.png" http://localhost:5000/upload
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"boxes": [[500,188,700,661],[1000,300,1150,750]]}' http://localhost:5000/draw_boxes/out9.png
+
+curl http://localhost:5000/get_image/out9.png -o modified_image.jpg
+
+curl -X POST -H "Content-Type: application/json" -d '{"boxes": [[500,188,700,661],[1000,197,1150,675]]}' http://localhost:5000/draw_boxes/out1.png
+
+
+
+<area target="" alt="1" title="1" href="" coords="225,523,757,654" shape="rect">
+<area target="" alt="1" title="1" href="" coords="692,,287,1025,1151" shape="rect">
+
+<area target="" alt="1" title="1" href="" coords="727,251,530,665" shape="rect">
+<area target="" alt="2" title="2" href="" coords="985,275,1142,692" shape="0">
+
+
+{"boxes": [[225, 523, 757, 654]]}
+
+[[114, 320, 1327, 389]
+[[225, 523, 757, 654]
+[[225, 523, 757, 654]
+[[225, 523, 757, 654]
+
+[10, 10, 100, 100],[150, 150, 250, 250]
+
+[455,188,637,661],[1000,197,1150,675]
