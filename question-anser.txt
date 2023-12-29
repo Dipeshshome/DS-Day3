@@ -1,0 +1,19 @@
+Which algorithm you will use? Why you choose this? Does CPU or GPU have an impact on your decision?
+Answer: Here i use region of interset(ROI) method. We can use a pre-trained
+object detection model. One common algorithm for object detection is the Single Shot MultiBox Detector (SSD) 
+or the You Only Look Once (YOLO) algorithm. These algorithms are fast and accurate for detecting objects in images.
+
+why?
+Efficiency
+Object Detection Capability
+Ease of Use
+Accuracy
+
+
+CPU or GPU?
+In my case it doesn't depends but the choice depends on the specific model and its computational requirements. Generally, using a GPU can
+significantly speed up the inference process, making real-time or near-real-time applications feasible. In deep
+learning frameworks, including TensorFlow and PyTorch, support GPU acceleration.
+
+What if given a video instead of images? Does your approach change?
+Yes need to change the approach. We need to convert the video in frames. then follow the previous approaches. Or we can also apply object detection/tracking algorithm.
