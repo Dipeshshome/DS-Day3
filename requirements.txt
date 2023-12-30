@@ -1,5 +1,4 @@
-Flask
-opencv-python
-Pillow
-torch
-
+flask 
+torch 
+torchvision
+ultralytics==8.0.20
