@@ -4,16 +4,15 @@ object detection model. One common algorithm for object detection is the Single 
 or the You Only Look Once (YOLO) algorithm. These algorithms are fast and accurate for detecting objects in images.
 
 why?
-Efficiency
-Object Detection Capability
-Ease of Use
-Accuracy
-
+Efficiency: YOLOv8 (You Only Look Once version 8) strikes a good balance between speed and accuracy. It processes the entire image in one forward pass,
+making it faster than some other object detection algorithms. It can also classifiy and tracking object.
+Object Detection Capability and Ease of use: YOLOv8 can effectively detect objects of different sizes and scales within an image, making it versatile for 
+various applications.
+Real Time application and Video: The algorithm's speed makes it suitable for real-time applications such as video surveillance, autonomous vehicles, and live event analysis.
 
 CPU or GPU?
-In my case it doesn't depends but the choice depends on the specific model and its computational requirements. Generally, using a GPU can
-significantly speed up the inference process, making real-time or near-real-time applications feasible. In deep
-learning frameworks, including TensorFlow and PyTorch, support GPU acceleration.
+In my case it doesn't depends because YoloV8 model is efficient in CPU and GPU. but using a GPU can significantly speed up the inference process, making real-time
+or near-real-time applications feasible.
 
 What if given a video instead of images? Does your approach change?
-Yes need to change the approach. We need to convert the video in frames. then follow the previous approaches. Or we can also apply object detection/tracking algorithm.
+Yes need to change the approach for video. But no need to change the model. We need to convert the video in frames. then follow the previous approache and then combine to create a video with bounding boxes.
