@@ -1,62 +1,60 @@
-from flask import Flask, request, jsonify, send_file
-from PIL import Image, ImageDraw
+from flask import Flask, render_template, request
 import os
-import json
+import cv2
+import numpy as np
+from werkzeug.utils import secure_filename
+from PIL import Image
+import torch
+import ultralytics
+from ultralytics import YOLO
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads'
-JSON_FOLDER = 'json'
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['JSON_FOLDER'] = JSON_FOLDER
+# Define the path to your YOLOv8 model file
+YOLO_MODEL_PATH = "yolov8n.pt"
 
 @app.route('/')
 def index():
-    return 'Hello, this is your Flask API!'
+    return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No file part'})
+@app.route('/', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        return render_template('index.html', error='No file part')
 
-    file = request.files['image']
+    file = request.files['file']
 
     if file.filename == '':
-        return jsonify({'error': 'No selected file'})
+        return render_template('index.html', error='No selected file')
 
     if file:
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(image_path)
-        return jsonify({'message': 'File uploaded successfully', 'filename': file.filename})
+        filename = secure_filename(file.filename)
+        file_path = os.path.join('uploads', filename)
+        file.save(file_path)
 
-@app.route('/draw_boxes/<filename>', methods=['POST'])
-def draw_boxes(filename):
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    json_path = os.path.join(app.config['JSON_FOLDER'], f"{os.path.splitext(filename)[0]}.json")
+        # Perform YOLOv8 object detection
+        result_image_path = run_yolo(file_path)
 
-    image = Image.open(image_path)
-    draw = ImageDraw.Draw(image)
+        return render_template('index.html', result_image=result_image_path)
 
-    # Assume the coordinates are provided in the request as a JSON object
-    box_coordinates = request.json.get('boxes', [])
+def run_yolo(image_path):
+    # Load YOLOv8 model
+    #model = torch.hub.load('.', 'custom', path=YOLO_MODEL_PATH, source='local')
+    model = YOLO('best.pt')
 
-    for box in box_coordinates:
-        draw.rectangle(box, outline='red', width=2)
+    # Perform inference
+    results = model.predict(image_path,conf=0.25)
 
-    image.save(image_path)
+    image = cv2.imread(image_path)
+    result_image_path = os.path.join('static', 'results', 'result.jpg')
+    for result in results:
+        boxes = result.boxes.cpu().xyxy  # Convert boxes to NumPy array
+        for box in boxes:
+            x1, y1, x2, y2 = box
+            cv2.rectangle(image, (int(y1), int(x1)), (int(y2), int(x2)), (0, 255, 0), 2)  # Draw green rectangles
 
-    with open(json_path, 'w') as json_file:
-        json.dump({'boxes': box_coordinates}, json_file)
-
-    return jsonify({'message': 'Boxes drawn and coordinates saved successfully'})
-
-@app.route('/get_image/<filename>')
-def get_image(filename):
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    return send_file(image_path, mimetype='image/jpeg')
+    cv2.imwrite(result_image_path, image)
+    return result_image_path
 
 if __name__ == '__main__':
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['JSON_FOLDER'], exist_ok=True)
     app.run(debug=True)
