@@ -2,65 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection</title>
+    <title>YOLOv8 Object Detection</title>
 </head>
 <body>
-    <h1>Object Detection</h1>
-    <input type="file" id="uploadInput" accept="image/*">
-    <canvas id="imageCanvas" width="500" height="500"></canvas>
-    <button onclick="saveCoordinates()">Save Coordinates</button>
-
-    <script>
-        let coordinates = [];
-
-        document.getElementById('uploadInput').addEventListener('change', handleFileSelect);
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-
-                    img.onload = function () {
-                        const canvas = document.getElementById('imageCanvas');
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    };
-                };
-
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function saveCoordinates() {
-            // Implement logic to manually draw boxes and save coordinates here
-            // Push coordinates to the 'coordinates' array
-
-            // Example: coordinates.push({ x1: 10, y1: 10, x2: 100, y2: 100 });
-
-            // Send coordinates to the server
-            fetch('/upload', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ coordinates }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Coordinates saved successfully!');
-                } else {
-                    alert('Failed to save coordinates.');
-                }
-            });
-        }
-    </script>
+    <h1>Upload Image for Object Detection</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .jpeg, .png">
+        <button type="submit">Upload</button>
+    </form>
+    {% if result_image %}
+        <h2>Result</h2>
+        <img src="{{ result_image }}" alt="Object Detection Result">
+    {% endif %}
 </body>
 </html>
