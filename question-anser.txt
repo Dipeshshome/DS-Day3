@@ -1,7 +1,5 @@
 Which algorithm you will use? Why you choose this? Does CPU or GPU have an impact on your decision?
-Answer: Here i use region of interset(ROI) method. We can use a pre-trained
-object detection model. One common algorithm for object detection is the Single Shot MultiBox Detector (SSD) 
-or the You Only Look Once (YOLO) algorithm. These algorithms are fast and accurate for detecting objects in images.
+Answer: Here i used pretrained YOLOv8 model and finetuning for our custom dataset. YoloV8 model is the latest model of Yolo and it can do three task detect tracking anad classification. Though accuracy is bit low in our casae becauase dataset is too minimal. we deep learning is a data hungry technique. So, becauase of small dataset accuracy is bit low.
 
 why?
 Efficiency: YOLOv8 (You Only Look Once version 8) strikes a good balance between speed and accuracy. It processes the entire image in one forward pass,
